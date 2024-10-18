@@ -9,6 +9,20 @@ on:
       target_version:
         description: 'Input a version (e.g., v1.0.0)'
         required: true
+      backend:
+        type: choice
+        description: Choose a backend api
+        options:
+        - be.uat.example.com/api
+        - be.staging.example.com/api
+        - be.test.example.com/api
+      cms:
+        type: choice
+        description: Choose a cms api
+        options:
+        - cms.uat.example.com
+        - cms.staging.example.com
+        - cms.test.example.com
 
 jobs:
   trigger:
@@ -23,6 +37,8 @@ jobs:
           event_type="trigger-workflow" 
           service="${{ github.event.inputs.target_service }}"
           version="${{ github.event.inputs.target_version }}"
+          backend="${{ github.event.inputs.backend }}"
+          cms="${{ github.event.inputs.cms }}"
   
           curl -L \
             -X POST \
@@ -30,4 +46,4 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.ASD }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
-            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"service\": \"$service\", \"version\": \"$version\"}}"
+            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"service\": \"$service\", \"version\": \"$version\", \"backend\": \"$backend\", \"cms\": \"$cms\"}}"
