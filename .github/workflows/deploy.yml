@@ -38,19 +38,8 @@ jobs:
       - name: Export static site
         run: npm run generate
 
-      - name: Debug directory structure
-        working-directory: ${{ github.workspace }}
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Listing repository root:"
-          ls -la
-          echo "Listing dashboard directory:"
-          ls -la dashboard/
-          echo "Looking for dist directory:"
-          find . -name "dist" -type d
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ github.workspace }}/dashboard/dist
+          publish_dir: ./dashboard/.output/public
